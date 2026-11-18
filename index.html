@@ -18,10 +18,11 @@
     .btn-primary:disabled { opacity: 0.5; }
     .msg { color: #ff4444; font-size: 13px; margin-top: 12px; text-align: center; min-height: 18px; }
     .gen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-    .gen-card { background: #151515; border: 1.5px solid #222; border-radius: 12px; padding: 20px 12px; text-align: center; cursor: pointer; transition: 0.2s; }
+    .gen-card { background: #151515; border: 1.5px solid #222; border-radius: 12px; padding: 20px 12px; text-align: center; cursor: pointer; transition: 0.2s; position: relative; }
     .gen-card:hover { border-color: #ff3366; background: #1a1015; }
     .gen-card h3 { margin: 0 0 8px; font-size: 16px; color: #ff6b9d; }
     .gen-card p { margin: 0; font-size: 11px; color: #888; line-height: 1.4; }
+    .gen-card .info-link { display: block; margin-top: 10px; font-size: 11px; color: #ff6b9d; text-decoration: underline; }
     .quiz-header { display: flex; justify-content: space-between; font-size: 13px; color: #888; margin-bottom: 16px; }
     .progress { height: 4px; background: #222; border-radius: 2px; overflow: hidden; margin-bottom: 24px; }
     .progress-fill { height: 100%; background: linear-gradient(90deg, #ff3366, #ff6b9d); width: 0%; transition: width 0.4s; }
@@ -42,12 +43,10 @@
     .gen-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
     .gen-tab { padding: 6px 14px; background: #1a1a1a; border: 1px solid #333; border-radius: 20px; font-size: 13px; cursor: pointer; color: #888; }
     .gen-tab.active { border-color: #ff3366; color: #ff6b9d; background: #2a1018; }
-    /* 结算确认页 */
     .confirm-box { text-align: center; padding: 50px 0; }
     .confirm-box .icon { font-size: 60px; margin-bottom: 20px; }
     .confirm-box h2 { font-size: 22px; margin: 0 0 12px; }
     .confirm-box p { color: #888; font-size: 14px; line-height: 1.6; margin: 0 0 30px; }
-    /* 计算进度页 */
     .calc-box { text-align: center; padding: 60px 0; }
     .calc-box .spinner { font-size: 50px; margin-bottom: 30px; animation: pulse 1s infinite; }
     @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
@@ -63,8 +62,8 @@
   <!-- Page 1: 输入授权码 -->
   <div id="page-input">
     <div class="hero">
-      <h1>✨ K-pop 性格原型</h1>
-      <p>20 道深度情境题 · 匹配 60 位顶级女团核心原型<br>输入授权码开始测试或查看已生成的档案</p>
+      <h1>✨ 解锁你的 K-pop 灵魂原型</h1>
+      <p>深度情境测试 · 匹配你的本命 Idol 人格<br>输入授权码开始测试或查看已生成的档案</p>
       <input type="text" id="codeInput" class="code-input" maxlength="6" placeholder="输入 6 位授权码" autocomplete="off">
       <button class="btn-primary" id="checkBtn" onclick="checkCode()">开始测试</button>
       <div class="msg" id="msg"></div>
@@ -78,10 +77,26 @@
       <p>每个宇宙包含该时代最具代表性的女团原型<br><span id="genRemainHint" style="color:#ff6b9d;"></span></p>
     </div>
     <div class="gen-grid">
-      <div class="gen-card" onclick="selectGen('gen2')"><h3>二代 · 情怀考古</h3><p>少女时代 / T-ara / 2NE1 / f(x) / KARA / SISTAR / 4minute / Apink / miss A / Fiestar / Nine Muses / Hello Venus / Stellar / Wonder Girls / Girl's Day</p></div>
-      <div class="gen-card" onclick="selectGen('gen3')"><h3>三代 · 个性顶流</h3><p>BLACKPINK / TWICE / Red Velvet / MAMAMOO / GFRIEND / AOA / EXID / MOMOLAND / CLC / Dreamcatcher / April / Weki Meki / gugudan / LABOUM / PRISTIN</p></div>
-      <div class="gen-card" onclick="selectGen('gen4')"><h3>四代 · 流量主力</h3><p>IVE / aespa / NewJeans / (G)I-DLE / LE SSERAFIM / ITZY / nmixx / STAYC / fromis_9 / Kep1er / Billlie / PURPLE KISS / Weeekly / Cherry Bullet / EVERGLOW</p></div>
-      <div class="gen-card" onclick="selectGen('gen5')"><h3>五代 · 新粉选秀</h3><p>BABYMONSTER / ILLIT / KATSEYE / FIFTY FIFTY / Hearts2Hearts / izna / tripleS / MEOVV / UNIS / IDNTT / REDCODE / XG / H1-KEY / MADEIN / SAYMYNAME</p></div>
+      <div class="gen-card" onclick="selectGen('gen2')">
+        <h3>二代 · 情怀考古</h3>
+        <p>少女时代 / T-ara / 2NE1 / f(x) / KARA / SISTAR / 4minute / Apink / miss A / Fiestar / Nine Muses / Hello Venus / Stellar / Wonder Girls / Girl's Day</p>
+        <a href="gen2.html" class="info-link" onclick="event.stopPropagation()">📖 了解该代女团</a>
+      </div>
+      <div class="gen-card" onclick="selectGen('gen3')">
+        <h3>三代 · 个性顶流</h3>
+        <p>BLACKPINK / TWICE / Red Velvet / MAMAMOO / GFRIEND / AOA / EXID / MOMOLAND / CLC / Dreamcatcher / April / Weki Meki / gugudan / LABOUM / PRISTIN</p>
+        <a href="gen3.html" class="info-link" onclick="event.stopPropagation()">📖 了解该代女团</a>
+      </div>
+      <div class="gen-card" onclick="selectGen('gen4')">
+        <h3>四代 · 流量主力</h3>
+        <p>IVE / aespa / NewJeans / (G)I-DLE / LE SSERAFIM / ITZY / nmixx / STAYC / fromis_9 / Kep1er / Billlie / PURPLE KISS / Weeekly / Cherry Bullet / EVERGLOW</p>
+        <a href="gen4.html" class="info-link" onclick="event.stopPropagation()">📖 了解该代女团</a>
+      </div>
+      <div class="gen-card" onclick="selectGen('gen5')">
+        <h3>五代 · 新粉选秀</h3>
+        <p>BABYMONSTER / ILLIT / KATSEYE / FIFTY FIFTY / Hearts2Hearts / izna / tripleS / MEOVV / UNIS / IDNTT / REDCODE / XG / H1-KEY / MADEIN / SAYMYNAME</p>
+        <a href="gen5.html" class="info-link" onclick="event.stopPropagation()">📖 了解该代女团</a>
+      </div>
     </div>
     <button class="btn-secondary" id="viewResultBtn" style="display:none; margin-top:16px;" onclick="showResultView()">📂 查看已测代际结果</button>
   </div>
@@ -97,6 +112,7 @@
     <div id="opts"></div>
     <div class="quiz-nav">
       <button class="btn-secondary" id="prevBtn" onclick="prevQuestion()">← 上一题</button>
+      <button class="btn-secondary" id="nextBtn" onclick="nextQuestion()" disabled>下一题 →</button>
     </div>
   </div>
 
@@ -105,7 +121,7 @@
     <div class="confirm-box">
       <div class="icon">🎯</div>
       <h2>你已完成全部 20 题</h2>
-      <p>系统将解析你的 5 维性格向量，<br>在 60 个原型中匹配你的本命 Idol。</p>
+      <p>系统将解析你的 5 维性格向量，<br>在候选原型中匹配你的本命 Idol。</p>
       <button class="btn-primary" onclick="startCalc()">确认开始结算</button>
       <button class="btn-secondary" style="margin-top:10px;" onclick="backToLastQ()">返回检查答案</button>
     </div>
@@ -344,7 +360,7 @@ const GEN_NAMES = { gen2: '二代', gen3: '三代', gen4: '四代', gen5: '五�
 let currentCode = '';
 let currentGen = '';
 let remaining = 0;
-let serverResults = {};      // { gen2:{...}, gen3:{...} }
+let serverResults = {};
 let answers = new Array(20).fill(null);
 let currentQ = 0;
 
@@ -373,12 +389,10 @@ async function checkCode() {
     const hasResult = Object.keys(serverResults).length > 0;
 
     if (remaining > 0) {
-      // 还能测 → 进代际选择
       document.getElementById('genRemainHint').innerText = `剩余 ${remaining} 次测试机会`;
       document.getElementById('viewResultBtn').style.display = hasResult ? 'block' : 'none';
       show('page-gen');
     } else {
-      // 次数用完 → 不能进测试，直接看结果
       if (hasResult) {
         currentGen = Object.keys(serverResults)[0];
         showResultView();
@@ -403,13 +417,14 @@ function selectGen(gen) {
   renderQuestion();
 }
 
-// 3. 渲染题目（含上一题高亮）
+// 3. 渲染题目（含选项高亮）
 function renderQuestion() {
   const q = questions[currentQ];
   document.getElementById('qNum').innerText = currentQ + 1;
   document.getElementById('qText').innerText = q.q;
   document.getElementById('prog').style.width = `${(currentQ / questions.length) * 100}%`;
   document.getElementById('prevBtn').disabled = (currentQ === 0);
+  document.getElementById('nextBtn').disabled = (answers[currentQ] === null);
 
   const container = document.getElementById('opts');
   container.innerHTML = '';
@@ -422,12 +437,10 @@ function renderQuestion() {
   });
 }
 
-// 4. 选选项 → 前进
+// 4. 选选项（只高亮，不前进）
 function selectOption(idx) {
   answers[currentQ] = idx;
-  currentQ++;
-  if (currentQ < questions.length) renderQuestion();
-  else show('page-confirm');   // 全部答完 → 结算确认
+  renderQuestion(); // 重新渲染以更新高亮和下一题按钮状态
 }
 
 // 5. 上一题
@@ -435,7 +448,15 @@ function prevQuestion() {
   if (currentQ > 0) { currentQ--; renderQuestion(); }
 }
 
-// 6. 返回检查最后一题
+// 6. 下一题
+function nextQuestion() {
+  if (answers[currentQ] === null) return; // 没选不能前进
+  currentQ++;
+  if (currentQ < questions.length) renderQuestion();
+  else show('page-confirm');
+}
+
+// 7. 返回检查最后一题
 function backToLastQ() {
   currentQ = questions.length - 1;
   document.getElementById('remainHint').innerText = `剩余 ${remaining} 次`;
@@ -443,21 +464,21 @@ function backToLastQ() {
   renderQuestion();
 }
 
-// 7. 开始结算（3秒进度条）
+// 8. 开始结算（3秒进度条）
 function startCalc() {
   show('page-calc');
   const fill = document.getElementById('calcFill');
   const pct = document.getElementById('calcPct');
   const txt = document.getElementById('calcText');
-  const steps = ['正在解析你的 20 个选择...', '构建 5 维性格向量 [E·T·D·A·C]...', '在 60 个原型中扫描匹配...', '计算欧氏距离，锁定本命...', '生成专属档案海报...'];
+  const steps = ['正在解析你的 20 个选择...', '构建 5 维性格向量场 [E·T·D·A·C]...', '扫描候选原型人格图谱...', '计算多维空间共振频率...', '生成专属档案海报...'];
   let p = 0, lastSi = -1;
   fill.style.width = '0%'; pct.innerText = '0%'; txt.innerText = steps[0];
   const iv = setInterval(() => {
-    p += 100 / 30;   // 30 帧 × 100ms = 3 秒
+    p += 100 / 30;
     if (p >= 100) {
       p = 100; clearInterval(iv);
       fill.style.width = '100%'; pct.innerText = '100%';
-      setTimeout(submitResult, 300);   // 满格后短暂停顿再出结果
+      setTimeout(submitResult, 300);
       return;
     }
     fill.style.width = p + '%';
@@ -467,7 +488,7 @@ function startCalc() {
   }, 100);
 }
 
-// 8. 计算分数（根据 answers 重新累加，重选自动生效）
+// 9. 计算分数
 function calcScores() {
   const s = [0, 0, 0, 0, 0];
   answers.forEach((idx, i) => {
@@ -479,7 +500,7 @@ function calcScores() {
   return s;
 }
 
-// 9. 匹配 + 保存
+// 10. 匹配 + 保存
 async function submitResult() {
   const userScores = calcScores();
   let bestMatch = idols[currentGen][0], minDiff = Infinity;
@@ -507,7 +528,7 @@ async function submitResult() {
   }
 }
 
-// 10. 结果页（含代际切换标签）
+// 11. 结果页
 function showResultView() {
   renderTabs();
   renderPoster(currentGen);
@@ -542,7 +563,6 @@ function renderPoster(gen) {
   document.getElementById('rDetail').innerText = r.detail;
 }
 
-// 输入框自动大写 + 回车
 document.getElementById('codeInput').addEventListener('input', function(e) { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); });
 document.getElementById('codeInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') checkCode(); });
 </script>
