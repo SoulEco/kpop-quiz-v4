@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-pop 性格原型测试</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; }
+    .wrap { max-width: 480px; margin: 0 auto; padding: 24px; }
+    .hidden { display: none !important; }
+    .hero { text-align: center; padding: 40px 0; }
+    .hero h1 { font-size: 26px; margin: 0 0 12px; background: linear-gradient(135deg, #ff3366, #ff6b9d); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: #888; font-size: 14px; line-height: 1.6; margin: 0 0 30px; }
+    .code-input { width: 100%; padding: 18px; font-size: 26px; letter-spacing: 8px; text-align: center; text-transform: uppercase; border: 2px solid #222; background: #151515; color: #fff; border-radius: 12px; outline: none; }
+    .code-input:focus { border-color: #ff3366; }
+    .btn-primary { width: 100%; padding: 16px; background: linear-gradient(135deg, #ff3366, #ff6b9d); color: #fff; font-weight: bold; border: none; border-radius: 12px; font-size: 17px; cursor: pointer; margin-top: 16px; }
+    .btn-primary:disabled { opacity: 0.5; }
+    .msg { color: #ff4444; font-size: 13px; margin-top: 12px; text-align: center; min-height: 18px; }
+    
+    /* 代际选择页 */
+    .gen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+    .gen-card { background: #151515; border: 1.5px solid #222; border-radius: 12px; padding: 20px 12px; text-align: center; cursor: pointer; transition: 0.2s; }
+    .gen-card:hover { border-color: #ff3366; background: #1a1015; }
+    .gen-card h3 { margin: 0 0 8px; font-size: 16px; color: #ff6b9d; }
+    .gen-card p { margin: 0; font-size: 11px; color: #888; line-height: 1.4; }
+    
+    /* 答题页 */
+    .quiz-header { display: flex; justify-content: space-between; font-size: 13px; color: #888; margin-bottom: 16px; }
+    .progress { height: 4px; background: #222; border-radius: 2px; overflow: hidden; margin-bottom: 24px; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #ff3366, #ff6b9d); width: 0%; transition: width 0.4s; }
+    .q-text { font-size: 18px; line-height: 1.6; font-weight: 600; margin-bottom: 24px; }
+    .opt { width: 100%; padding: 14px; background: #151515; border: 1.5px solid #222; color: #fff; border-radius: 10px; margin-bottom: 10px; text-align: left; cursor: pointer; font-size: 14px; line-height: 1.5; }
+    .opt:hover { border-color: #ff3366; }
+    
+    /* 结果页 */
+    .poster { background: linear-gradient(145deg, #1a0f14, #0f0f0f); border: 1px solid #2a2a2a; border-radius: 20px; padding: 30px 20px; text-align: center; }
+    .poster-tag { font-size: 11px; color: #ff3366; letter-spacing: 3px; margin-bottom: 12px; }
+    .poster-name { font-size: 30px; font-weight: 800; margin: 8px 0; background: linear-gradient(135deg, #fff, #ff6b9d); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .poster-desc { color: #aaa; font-size: 15px; margin-bottom: 16px; }
+    .poster-detail { background: rgba(255,51,102,0.08); border-left: 3px solid #ff3366; padding: 14px; border-radius: 8px; text-align: left; font-size: 13px; line-height: 1.7; color: #ddd; }
+    .poster-footer { margin-top: 20px; font-size: 11px; color: #555; }
+    .btn-secondary { width: 100%; padding: 14px; background: #1a1a1a; color: #fff; border: 1px solid #333; border-radius: 12px; font-size: 15px; cursor: pointer; margin-top: 10px; }
+    .status-badge { display: inline-block; padding: 4px 12px; background: rgba(255,51,102,0.15); color: #ff6b9d; border-radius: 20px; font-size: 12px; margin-top: 12px; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Page 1: 输入授权码 -->
+  <div id="page-input">
+    <div class="hero">
+      <h1>✨ K-pop 性格原型</h1>
+      <p>20 道深度情境题 · 匹配 60 位顶级女团核心原型<br>测试完成后输入授权码查看完整报告</p>
+      <input type="text" id="codeInput" class="code-input" maxlength="6" placeholder="输入 6 位授权码" autocomplete="off">
+      <button class="btn-primary" id="checkBtn" onclick="checkCode()">开始测试</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Page 2: 代际选择 -->
+  <div id="page-gen" class="hidden">
+    <div class="hero">
+      <h1>选择你的测试宇宙</h1>
+      <p>每个宇宙包含该时代最具代表性的女团原型</p>
+    </div>
+    <div class="gen-grid">
+      <div class="gen-card" onclick="selectGen('gen2')">
+        <h3>二代 · 情怀考古</h3>
+        <p>少女时代 / T-ara / 2NE1 / f(x) / KARA / SISTAR / 4minute / Apink / miss A / Fiestar / Nine Muses / Hello Venus / Stellar / Wonder Girls / Girl's Day</p>
+      </div>
+      <div class="gen-card" onclick="selectGen('gen3')">
+        <h3>三代 · 个性顶流</h3>
+        <p>BLACKPINK / TWICE / Red Velvet / MAMAMOO / GFRIEND / AOA / EXID / MOMOLAND / CLC / Dreamcatcher / April / Weki Meki / gugudan / LABOUM / PRISTIN</p>
+      </div>
+      <div class="gen-card" onclick="selectGen('gen4')">
+        <h3>四代 · 流量主力</h3>
+        <p>IVE / aespa / NewJeans / (G)I-DLE / LE SSERAFIM / ITZY / nmixx / STAYC / fromis_9 / Kep1er / Billlie / PURPLE KISS / Weeekly / Cherry Bullet / EVERGLOW</p>
+      </div>
+      <div class="gen-card" onclick="selectGen('gen5')">
+        <h3>五代 · 新粉选秀</h3>
+        <p>BABYMONSTER / ILLIT / KATSEYE / FIFTY FIFTY / Hearts2Hearts / izna / tripleS / MEOVV / UNIS / IDNTT / REDCODE / XG / H1-KEY / MADEIN / SAYMYNAME</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page 3: 答题 -->
+  <div id="page-quiz" class="hidden">
+    <div class="quiz-header">
+      <span>题目 <span id="qNum">1</span> / 20</span>
+      <span id="remainHint" style="color:#ff6b9d;"></span>
+    </div>
+    <div class="progress"><div class="progress-fill" id="prog"></div></div>
+    <div class="q-text" id="qText"></div>
+    <div id="opts"></div>
+  </div>
+
+  <!-- Page 4: 结果 -->
+  <div id="page-result" class="hidden">
+    <div class="poster">
+      <div class="poster-tag">K-POP PERSONALITY ARCHIVE</div>
+      <div class="poster-name" id="rName">--</div>
+      <div class="poster-desc" id="rDesc">--</div>
+      <div class="poster-detail" id="rDetail">--</div>
+      <div class="poster-footer">本档案基于你的选择生成 · 仅供趣味探索</div>
+    </div>
+    <p style="text-align:center; color:#666; font-size:13px; margin:20px 0;">👆 长按上方卡片保存海报</p>
+    <div id="statusArea" style="text-align:center;"></div>
+    <button class="btn-secondary" onclick="location.reload()">返回首页</button>
+  </div>
+</div>
+
+<script>
+// ========== 20道题 (5维: E能量, T理性, D自律, A野心, C共情) ==========
+const questions = [
+  // E维度 (1-4)
+  { q: "参加一个有很多陌生人的聚会，你通常是？", opts: [
+    { t: "主动破冰，成为气氛组，甚至主动提议玩游戏", s: [4, 2, 2, 3, 2] },
+    { t: "安静待在角落，等别人来搭话，只和认识的人聊", s: [1, 3, 3, 1, 2] },
+    { t: "观察一会儿，找到看起来好相处的人再加入", s: [2, 3, 3, 2, 3] },
+    { t: "直接展示一项特长（如唱歌/才艺）来吸引注意", s: [4, 2, 3, 4, 4] }
+  ]},
+  { q: "被突然要求即兴表演/分享，你会？", opts: [
+    { t: "毫不怯场，立刻接梗并制造意想不到的笑点", s: [4, 2, 2, 3, 3] },
+    { t: "稍微害羞，但努力配合完成，不冷场", s: [2, 3, 3, 2, 2] },
+    { t: "顺势把机会抛给更擅长的人", s: [2, 3, 2, 1, 3] },
+    { t: "借机展现隐藏才华（如乐器/舞蹈/专业深度）", s: [4, 3, 4, 3, 4] }
+  ]},
+  { q: "在社交软件上，你的聊天风格通常是？", opts: [
+    { t: "秒回，喜欢发语音/表情包，主动找话题", s: [4, 1, 2, 3, 2] },
+    { t: "轮回，喜欢文字交流，思考后再回复", s: [1, 4, 3, 2, 3] },
+    { t: "看心情回，喜欢分享日常碎片", s: [3, 2, 2, 2, 4] },
+    { t: "只回复@我的消息，不喜欢无效社交", s: [1, 3, 3, 1, 2] }
+  ]},
+  { q: "面对一群不认识的人，你的第一反应是？", opts: [
+    { t: "兴奋，觉得可以认识新朋友", s: [4, 2, 2, 3, 2] },
+    { t: "紧张，担心自己说错话", s: [1, 3, 3, 1, 3] },
+    { t: "平静，观察谁看起来比较友善", s: [2, 3, 3, 2, 3] },
+    { t: "无所谓，反正以后也不会再联系", s: [2, 2, 2, 1, 2] }
+  ]},
+  // T维度 (5-8)
+  { q: "和朋友/同事发生严重误会，你通常？", opts: [
+    { t: "列出利弊分析，用事实和逻辑说服对方", s: [2, 4, 3, 3, 2] },
+    { t: "当和事佬，努力找让双方都满意的方案", s: [2, 2, 3, 1, 4] },
+    { t: "提出最大胆的新想法，直接打破僵局", s: [4, 3, 2, 4, 4] },
+    { t: "先冷静几天，等情绪过去再沟通", s: [1, 4, 3, 2, 3] }
+  ]},
+  { q: "做一个重要决定时，你更依赖？", opts: [
+    { t: "数据和客观分析，理性权衡利弊", s: [2, 4, 4, 3, 2] },
+    { t: "直觉和感受，相信自己的第一反应", s: [3, 1, 2, 3, 4] },
+    { t: "身边信任的人的建议", s: [2, 2, 3, 1, 4] },
+    { t: "过往的经验和成功案例", s: [2, 4, 4, 2, 2] }
+  ]},
+  { q: "面对突发状况，你的第一反应是？", opts: [
+    { t: "立刻分析原因，寻找解决方案", s: [2, 4, 3, 3, 2] },
+    { t: "先安抚大家的情绪，再处理问题", s: [2, 2, 3, 1, 4] },
+    { t: "有点慌，但会努力保持冷静", s: [2, 3, 3, 2, 3] },
+    { t: "直接行动，边做边调整", s: [4, 2, 2, 4, 3] }
+  ]},
+  { q: "别人批评你时，你会？", opts: [
+    { t: "理性分析批评是否合理，有则改之", s: [2, 4, 4, 2, 2] },
+    { t: "感到难过，但会默默反思", s: [1, 2, 3, 1, 4] },
+    { t: "直接反驳，如果我觉得自己没错", s: [4, 3, 2, 4, 3] },
+    { t: "表面接受，心里有自己的判断", s: [2, 4, 3, 3, 2] }
+  ]},
+  // D维度 (9-12)
+  { q: "为了准备一个重要的考试/项目，连续熬夜后身体到达极限，你会？", opts: [
+    { t: "吞下咖啡/功能饮料，死磕到底，哪怕状态不好也要完成", s: [2, 3, 4, 3, 2] },
+    { t: "嘴上抱怨好累，但关键时刻绝不掉链子", s: [4, 2, 2, 3, 3] },
+    { t: "担心队友/同事状态，主动帮忙分担", s: [2, 2, 3, 1, 4] },
+    { t: "直接休息，身体最重要，明天再说", s: [2, 3, 1, 1, 3] }
+  ]},
+  { q: "你的书桌/工作台通常是？", opts: [
+    { t: "整洁有序，每样东西都有固定位置", s: [2, 3, 4, 2, 2] },
+    { t: "有点乱，但我知道每样东西在哪", s: [3, 2, 2, 2, 4] },
+    { t: "非常乱，经常找不到东西", s: [3, 1, 1, 2, 4] },
+    { t: "极简风格，只放必需品", s: [2, 4, 4, 2, 3] }
+  ]},
+  { q: "面对一个长期目标，你会？", opts: [
+    { t: "制定详细计划，严格执行，绝不放弃", s: [2, 3, 4, 4, 2] },
+    { t: "有大致方向，边走边调整", s: [3, 2, 2, 3, 3] },
+    { t: "容易半途而废，需要外部激励", s: [3, 1, 1, 2, 4] },
+    { t: "目标明确，但会灵活调整策略", s: [2, 4, 3, 3, 2] }
+  ]},
+  { q: "你对“完美”的态度是？", opts: [
+    { t: "追求完美，细节决定成败", s: [2, 3, 4, 3, 2] },
+    { t: "完成比完美重要，先做再说", s: [3, 2, 2, 3, 3] },
+    { t: "完美是给别人看的，自己舒服就行", s: [2, 2, 1, 1, 4] },
+    { t: "在能力范围内做到最好", s: [2, 3, 3, 2, 3] }
+  ]},
+  // A维度 (13-16)
+  { q: "在团队中争取核心位置/资源，你的态度是？", opts: [
+    { t: "主动出击，用实力和气场证明自己配得上", s: [3, 3, 3, 4, 2] },
+    { t: "顺其自然，如果选我我就做，不选我也不强求", s: [2, 3, 3, 1, 3] },
+    { t: "默默努力，用结果让领导/老师主动选我", s: [2, 3, 4, 3, 2] },
+    { t: "用独特的方式/才艺吸引注意，让大家都想选我", s: [4, 2, 2, 3, 4] }
+  ]},
+  { q: "面对竞争对手，你会？", opts: [
+    { t: "视为动力，努力超越对方", s: [3, 3, 4, 4, 2] },
+    { t: "无所谓，做好自己的事就行", s: [2, 3, 3, 1, 3] },
+    { t: "有点焦虑，担心自己不够好", s: [1, 2, 3, 2, 4] },
+    { t: "欣赏对方，甚至想和对方合作", s: [3, 3, 2, 2, 4] }
+  ]},
+  { q: "别人质疑你的能力时，你会？", opts: [
+    { t: "用行动证明，让他们闭嘴", s: [3, 3, 4, 4, 2] },
+    { t: "有点难过，但会默默努力", s: [1, 2, 3, 2, 4] },
+    { t: "直接反驳，展示我的实力", s: [4, 3, 2, 4, 3] },
+    { t: "不在意，我知道自己几斤几两", s: [2, 3, 3, 2, 3] }
+  ]},
+  { q: "你对“成功”的定义是？", opts: [
+    { t: "站在顶峰，成为最优秀的人", s: [3, 3, 4, 4, 2] },
+    { t: "做自己喜欢的事，快乐就好", s: [3, 2, 2, 1, 4] },
+    { t: "和爱的人在一起，平凡幸福", s: [2, 2, 3, 1, 4] },
+    { t: "不断突破自我，不留遗憾", s: [3, 3, 4, 3, 3] }
+  ]},
+  // C维度 (17-20)
+  { q: "朋友向你倾诉烦恼，你会？", opts: [
+    { t: "认真倾听，给予情感支持和安慰", s: [2, 2, 3, 1, 4] },
+    { t: "帮忙分析问题，提供解决方案", s: [2, 4, 3, 2, 2] },
+    { t: "带她出去吃顿好的，转移注意力", s: [4, 2, 1, 2, 3] },
+    { t: "默默陪伴，递上她喜欢的零食", s: [1, 2, 3, 1, 4] }
+  ]},
+  { q: "看到别人遇到困难，你会？", opts: [
+    { t: "主动上前帮忙，哪怕不认识", s: [3, 2, 3, 2, 4] },
+    { t: "如果对方求助，我会尽力帮忙", s: [2, 3, 3, 2, 3] },
+    { t: "有点想帮，但怕被拒绝/误会", s: [1, 3, 3, 1, 4] },
+    { t: "除非关系很好，否则不管", s: [2, 3, 2, 2, 2] }
+  ]},
+  { q: "在团队中，你通常扮演什么角色？", opts: [
+    { t: "领导者，统筹全局", s: [3, 4, 4, 4, 2] },
+    { t: "执行者，认真完成分配的任务", s: [2, 3, 4, 2, 2] },
+    { t: "气氛组，活跃团队氛围", s: [4, 2, 2, 2, 3] },
+    { t: "倾听者，照顾大家的情绪", s: [2, 2, 3, 1, 4] }
+  ]},
+  { q: "你对“温柔”的理解是？", opts: [
+    { t: "一种力量，能化解矛盾，温暖人心", s: [2, 2, 3, 1, 4] },
+    { t: "一种态度，对世界保持善意", s: [2, 3, 3, 2, 4] },
+    { t: "一种策略，以柔克刚", s: [2, 4, 3, 3, 2] },
+    { t: "一种性格，天生如此", s: [2, 2, 2, 1, 4] }
+  ]}
+];
+
+// ========== 60人原型池 (5维: E, T, D, A, C) ==========
+const idols = {
+  gen2: [
+    { name: '朴智妍 (T-ara)', desc: '全能ACE/逆袭大女主', detail: '你拥有极强的多面性，既能展现专业实力，又能在大起大落后坚韧逆袭。你是团队的核心支柱，用全能表现证明自己的价值。', scores: [30, 60, 70, 50, 40] },
+    { name: '咸恩静 (T-ara)', desc: '演员队长/坚韧担当', detail: '你外表坚强，内心柔软。作为领导者，你承担压力，默默守护团队。你的坚韧和责任感让人敬佩。', scores: [25, 50, 65, 45, 55] },
+    { name: '李居丽 (T-ara)', desc: '独特神颜/话题女王', detail: '你拥有独特的审美和强烈的个人风格。你不怕争议，敢于展现真实的自己，是人群中的视觉焦点。', scores: [40, 40, 50, 60, 70] },
+    { name: '全宝蓝 (T-ara)', desc: '童颜反转/低调实力', detail: '你外表可爱，内心成熟。你不张扬，但关键时刻总能展现惊人实力，是团队里的隐藏宝藏。', scores: [30, 40, 55, 30, 50] },
+    { name: '朴素珍 (T-ara)', desc: '感性主唱/情感丰富', detail: '你拥有极强的共情能力和感性思维。你的声音和存在能治愈人心，是团队的情感纽带。', scores: [20, 30, 40, 20, 70] },
+    { name: '朴昭妍 (T-ara)', desc: '忙内成长/独特音色', detail: '你从青涩走向成熟，拥有独特的个人魅力。你的成长轨迹让人感动，是团队里的活力源泉。', scores: [35, 30, 45, 35, 55] },
+    { name: '泰妍 (少女时代)', desc: '主唱天花板/感性实力', detail: '你拥有顶级的专业实力和丰富的情感表达。你的声音能传递力量，是团队的艺术灵魂。', scores: [25, 40, 60, 40, 65] },
+    { name: '允儿 (少女时代)', desc: '国民初恋/神颜演员', detail: '你拥有无可挑剔的外貌和温柔的性格。你平易近人，是大众心中的完美偶像，转型演员也非常成功。', scores: [30, 40, 50, 30, 60] },
+    { name: 'CL (2NE1)', desc: '霸气女王/国际舞台', detail: '你拥有强大的气场和舞台统治力。你自信、大胆，是国际范儿的代表，用实力征服世界。', scores: [50, 50, 55, 70, 65] },
+    { name: '宋茜 (f(x))', desc: '中国队长/拼命三娘', detail: '你拥有极强的自律和努力精神。作为队长，你全方位发展，用汗水和坚持证明自己的价值。', scores: [35, 45, 75, 55, 45] },
+    { name: 'Krystal (f(x))', desc: '高冷专业/独特理性', detail: '你外表高冷，内心理性。你追求专业极致，有独特的个人风格，是团队里的冷静担当。', scores: [25, 65, 60, 50, 40] },
+    { name: '雪莉 (f(x))', desc: '自由灵魂/真实艺术', detail: '你追求自由，敢于打破常规。你真实、艺术，不怕争议，是团队里的独特存在。', scores: [45, 35, 30, 65, 75] },
+    { name: '泫雅 (4minute)', desc: '性感Icon/潮流大胆', detail: '你拥有强烈的个人风格和舞台表现力。你大胆、时尚，是潮流的引领者，用魅力征服观众。', scores: [55, 30, 45, 65, 70] },
+    { name: '曹璐 (Fiestar)', desc: '中国成员/逆袭真实', detail: '你经历低谷但从未放弃，用真实和综艺感赢得喜爱。你的逆袭故事激励人心，是团队里的开心果。', scores: [45, 35, 50, 45, 55] },
+    { name: '倞利 (Nine Muses)', desc: '身材Icon/自信直率', detail: '你拥有傲人的身材和自信的态度。你直率、性感，敢于展现自己的优势，是团队里的视觉担当。', scores: [40, 35, 50, 55, 60] },
+    { name: '李孝恩 (Stellar)', desc: '争议性感/坚韧逆袭', detail: '你经历争议但依然坚持，用坚韧和独特魅力证明自己。你的故事充满戏剧性，是团队里的话题人物。', scores: [35, 40, 55, 50, 50] }
+  ],
+  gen3: [
+    { name: 'Jennie (BLACKPINK)', desc: '松弛时尚Icon/慵懒', detail: '你懂得在努力与松弛之间找到完美平衡。你时尚、慵懒，拥有独特的个人魅力，是审美标杆。', scores: [35, 30, 40, 50, 65] },
+    { name: 'Jisoo (BLACKPINK)', desc: '演员神颜/温柔反差', detail: '你拥有温柔的外表和稳定的内心。你转型演员成功，是团队里的定海神针，给人安心感。', scores: [25, 40, 45, 30, 60] },
+    { name: 'Rosé (BLACKPINK)', desc: '独特音色/感性艺术', detail: '你拥有独特的艺术气质和感性思维。你的声音和风格与众不同，是团队里的艺术灵魂。', scores: [30, 35, 40, 40, 70] },
+    { name: 'Lisa (BLACKPINK)', desc: '舞蹈天花板/国际开朗', detail: '你拥有顶级的舞蹈实力和开朗的性格。你直率、国际范，是团队里的活力源泉和舞台王者。', scores: [55, 30, 60, 50, 45] },
+    { name: '娜琏 (TWICE)', desc: '元气C位/努力中心', detail: '你拥有元气满满的性格和极强的中心感。你努力、可爱，是团队里的核心担当，用活力感染所有人。', scores: [45, 35, 55, 45, 50] },
+    { name: '子瑜 (TWICE)', desc: '神颜安静/礼貌台湾之光', detail: '你拥有无可挑剔的外貌和安静礼貌的性格。你低调、优雅，是团队里的视觉焦点和国民代表。', scores: [20, 35, 45, 25, 55] },
+    { name: '定延 (TWICE)', desc: '酷反转/真实不迎合', detail: '你外表酷帅，内心真实。你不迎合大众，敢于展现自己的个性，是团队里的反转魅力担当。', scores: [35, 45, 40, 55, 45] },
+    { name: 'Irene (Red Velvet)', desc: '完美神颜/冷艳队长', detail: '你拥有完美的外貌和冷艳的气质。作为队长，你追求极致，是团队里的视觉和精神双重领袖。', scores: [30, 50, 65, 55, 40] },
+    { name: 'Wendy (Red Velvet)', desc: '温暖治愈/主唱共情', detail: '你拥有温暖治愈的性格和顶级的唱功。你共情力强，是团队里的太阳，用声音和存在治愈人心。', scores: [25, 35, 45, 25, 75] },
+    { name: '华莎 (MAMAMOO)', desc: '自信辣妹/反焦虑独特', detail: '你拥有极强的自信和独特的风格。你打破身材焦虑，展现真实自我，是团队里的个性担当。', scores: [45, 40, 45, 65, 70] },
+    { name: '银河 (GFRIEND)', desc: '力量清纯/努力逆袭', detail: '你拥有力量与清纯并存的特质。你努力、坚韧，用实力证明自己，是团队里的成长型担当。', scores: [30, 40, 60, 50, 50] },
+    { name: '雪炫 (AOA)', desc: '身材Icon/演员蜕变', detail: '你拥有傲人的身材和演员的转型实力。你经历争议后蜕变，用努力证明自己的多面性。', scores: [35, 40, 55, 50, 50] },
+    { name: 'Hani (EXID)', desc: '综艺反转/真实救团', detail: '你拥有极强的综艺感和反转魅力。你真实、直率，用个人魅力拯救团队，是团队里的话题人物。', scores: [50, 35, 40, 50, 55] },
+    { name: 'Nancy (MOMOLAND)', desc: '混血神颜/开朗独特', detail: '你拥有混血神颜和开朗的性格。你独特、耀眼，是团队里的视觉焦点和活力源泉。', scores: [45, 30, 40, 45, 60] },
+    { name: '权娜拉 (Hello Venus)', desc: '演员神颜/话题转型', detail: '你拥有神颜外貌和演员的转型实力。你从偶像成功转型演员，用作品证明自己的多面性。', scores: [30, 45, 50, 45, 50] },
+    { name: '李瑜瑛 (Hello Venus)', desc: '独特模特/高冷理性', detail: '你拥有模特般的身高和独特的气质。你高冷、理性，是团队里的独特存在和视觉担当。', scores: [25, 50, 50, 45, 40] }
+  ],
+  gen4: [
+    { name: '张元英 (IVE)', desc: '完美管理/大女主自律', detail: '你拥有极强的自律和完美主义精神。你是大女主，用极致管理和努力证明自己的价值，是团队里的标杆。', scores: [35, 50, 75, 70, 30] },
+    { name: '安宥真 (IVE)', desc: '帅气综艺/可靠队长', detail: '你拥有帅气的外表和极强的综艺感。作为队长，你可靠、有担当，是团队里的核心支柱。', scores: [45, 45, 55, 50, 55] },
+    { name: 'Karina/柳智敏 (aespa)', desc: 'AI冷艳/舞台掌控争议', detail: '你拥有AI般的外貌和冷艳的气质。你掌控舞台，实力碾压，是团队里的视觉和实力双重王者。', scores: [40, 55, 55, 65, 65] },
+    { name: '宁艺卓 (aespa)', desc: '真实吃货/高音维他命', detail: '你真实不做作，拥有顶级的高音实力。你是团队里的维他命，用真实和活力感染所有人。', scores: [55, 30, 40, 50, 65] },
+    { name: 'Winter (aespa)', desc: '全能反差/努力独特', detail: '你拥有全能的实力和反差的魅力。你努力、独特，是团队里的成长型担当和音色王者。', scores: [35, 45, 60, 50, 50] },
+    { name: 'Minji (NewJeans)', desc: '少年感清爽/可靠队长', detail: '你拥有少年般的清爽和可靠的气质。作为队长，你稳重、有担当，是团队里的精神领袖。', scores: [30, 45, 55, 40, 60] },
+    { name: 'Hanni (NewJeans)', desc: '活力可爱/澳洲直率', detail: '你拥有活力可爱的性格和直率的态度。你来自澳洲，带来不同的文化视角，是团队里的开心果。', scores: [50, 30, 40, 45, 65] },
+    { name: 'Haerin (NewJeans)', desc: '猫系高冷/独特神秘', detail: '你拥有猫系般的高冷和独特的气质。你神秘、有魅力，是团队里的独特存在和视觉焦点。', scores: [30, 50, 45, 55, 70] },
+    { name: '田小娟 ((G)I-DLE)', desc: '天才制作/霸气全能', detail: '你拥有天才般的制作能力和霸气的气场。你全能、打破规则，是团队里的核心大脑和创作者。', scores: [40, 70, 65, 70, 55] },
+    { name: '宋雨琦 ((G)I-DLE)', desc: '烟嗓综艺/北京开朗', detail: '你拥有独特的烟嗓和极强的综艺感。你来自北京，开朗、直率，是团队里的活力源泉和语言担当。', scores: [55, 35, 45, 50, 55] },
+    { name: '金采源 (LE SSERAFIM)', desc: '努力逆袭/队长争议', detail: '你经历选秀逆袭，拥有极强的努力精神。作为队长，你承担压力，用成长证明自己的价值。', scores: [35, 45, 70, 60, 50] },
+    { name: '宫脇咲良 (LE SSERAFIM)', desc: '野心极致/樱花努力', detail: '你拥有极强的野心和极致努力的精神。你从日本到韩国，用汗水和坚持证明自己的价值，是团队里的奋斗者。', scores: [35, 50, 75, 65, 40] },
+    { name: '黄礼志 (ITZY)', desc: '全能队长/猫系独特', detail: '你拥有全能的实力和猫系般的独特魅力。作为队长，你帅气、有担当，是团队里的核心支柱。', scores: [40, 50, 60, 55, 55] },
+    { name: '雪允 (nmixx)', desc: '神颜优雅/独特上升', detail: '你拥有神颜外貌和优雅的气质。你独特、有上升潜力，是团队里的视觉焦点和成长型担当。', scores: [30, 40, 50, 45, 65] },
+    { name: '秀珉 (STAYC)', desc: '神颜反转/抖音翻跳', detail: '你拥有神颜外貌和反转的魅力。你在抖音翻跳中展现独特风格，是团队里的视觉和话题担当。', scores: [40, 35, 45, 50, 60] }
+  ],
+  gen5: [
+    { name: 'Ahyeon (BABYMONSTER)', desc: '全能ACE/中心争议', detail: '你拥有全能的实力和中心位的气场。你经历争议后依然闪耀，用实力证明自己的价值，是团队里的核心。', scores: [45, 45, 60, 65, 55] },
+    { name: 'Ruka (BABYMONSTER)', desc: '舞蹈酷飒/日本独特', detail: '你拥有顶级的舞蹈实力和酷飒的气质。你来自日本，带来独特的文化视角，是团队里的舞台王者。', scores: [40, 45, 65, 55, 60] },
+    { name: 'Asa (BABYMONSTER)', desc: '低调Rapper/酷实力派', detail: '你低调、酷飒，拥有极强的Rapper实力。你不张扬，但用作品说话，是团队里的隐藏宝藏。', scores: [30, 50, 60, 50, 55] },
+    { name: 'Minju (ILLIT)', desc: '优雅天鹅/温柔坚定', detail: '你拥有天鹅般的优雅和温柔坚定的性格。你独特、有魅力，是团队里的视觉焦点和气质担当。', scores: [25, 40, 55, 40, 70] },
+    { name: '卢玧我 (ILLIT)', desc: '独特忙内/成长争议', detail: '你作为忙内，拥有独特的个性和成长潜力。你经历争议，用成长证明自己的价值，是团队里的话题人物。', scores: [40, 35, 45, 50, 60] },
+    { name: '李沅禧 (ILLIT)', desc: '神颜清新/独特上升', detail: '你拥有神颜外貌和清新的气质。你独特、有上升潜力，是团队里的视觉焦点和成长型担当。', scores: [30, 35, 50, 40, 65] },
+    { name: 'Yoonchae (KATSEYE)', desc: '国际忙内/多元纪录片', detail: '你作为国际忙内，拥有多元的文化背景。你通过纪录片展现真实自我，是团队里的独特存在。', scores: [35, 35, 45, 40, 65] },
+    { name: 'Manon (KATSEYE)', desc: '瑞士时尚/多元独特', detail: '你来自瑞士，拥有时尚的气质和多元的文化视角。你独特、有魅力，是团队里的国际担当。', scores: [35, 40, 45, 45, 70] },
+    { name: 'Keena (FIFTY FIFTY)', desc: '创作坚韧/合约逆袭', detail: '你拥有创作才华和坚韧的性格。你经历合约案争议，用坚持证明自己的价值，是团队里的创作者。', scores: [30, 55, 55, 55, 50] },
+    { name: 'Carmen (Hearts2Hearts)', desc: '队长全能/独特新团', detail: '作为新团队长，你拥有全能的实力和独特的气质。你承担压力，用领导力带领团队前进。', scores: [35, 50, 60, 55, 50] },
+    { name: '林书媛 (izna)', desc: '选秀C位/实力独特', detail: '你通过选秀获得C位，拥有极强的实力和独特魅力。你用表现证明自己的价值，是团队里的核心。', scores: [40, 45, 60, 60, 45] },
+    { name: '金琉然 (tripleS)', desc: '队长全能/死忠二创', detail: '作为多单元团队长，你拥有全能的实力和独特的魅力。你吸引死忠二创，是团队里的核心支柱。', scores: [35, 50, 60, 50, 55] },
+    { name: '尹舒妍 (tripleS)', desc: '神颜争议/独特话题', detail: '你拥有神颜外貌和争议的话题度。你独特、有魅力，是团队里的视觉焦点和话题人物。', scores: [35, 40, 45, 55, 65] },
+    { name: 'Gawon (MEOVV)', desc: '队长酷飒/新团话题', detail: '作为新团队长，你拥有酷飒的气质和领导力。你带领团队前进，是团队里的核心和话题人物。', scores: [40, 45, 55, 55, 50] },
+    { name: 'Hyeonju (UNIS)', desc: '队长全能/选秀独特', detail: '你通过选秀展现全能实力和独特魅力。作为队长，你承担压力，用领导力带领团队前进。', scores: [35, 50, 60, 55, 50] }
+  ]
+};
+
+let currentCode = '';
+let currentGen = '';
+let currentQ = 0;
+let userScores = [0, 0, 0, 0, 0]; // [E, T, D, A, C]
+
+function show(id) {
+  document.querySelectorAll('.wrap > div').forEach(d => d.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function showMsg(text) {
+  const el = document.getElementById('msg');
+  el.innerText = text;
+}
+
+async function checkCode() {
+  const code = document.getElementById('codeInput').value.trim().toUpperCase();
+  if (code.length !== 6) return showMsg('请输入完整的 6 位授权码');
+
+  const btn = document.getElementById('checkBtn');
+  btn.disabled = true; btn.innerText = '验证中...';
+  showMsg('');
+
+  try {
+    const res = await fetch('/api/check', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code }) });
+    const data = await res.json();
+    if (data.error) { showMsg(data.error); btn.disabled = false; btn.innerText = '开始测试'; return; }
+    
+    currentCode = code;
+    // 如果所有代际都测过了且次数用完，直接提示
+    if (data.remaining <= 0 && Object.keys(data.results).length >= 4) {
+      showMsg('该授权码所有代际测试已完成');
+      btn.disabled = false; btn.innerText = '开始测试';
+      return;
+    }
+    
+    show('page-gen');
+  } catch (e) { showMsg('网络错误'); btn.disabled = false; btn.innerText = '开始测试'; }
+}
+
+function selectGen(gen) {
+  currentGen = gen;
+  currentQ = 0;
+  userScores = [0, 0, 0, 0, 0];
+  show('page-quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById('qNum').innerText = currentQ + 1;
+  document.getElementById('qText').innerText = q.q;
+  document.getElementById('prog').style.width = `${(currentQ / questions.length) * 100}%`;
+
+  const container = document.getElementById('opts');
+  container.innerHTML = '';
+  q.opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerText = opt.t;
+    btn.onclick = () => selectOption(opt.s);
+    container.appendChild(btn);
+  });
+}
+
+function selectOption(scores) {
+  for (let i = 0; i < 5; i++) userScores[i] += scores[i];
+  currentQ++;
+  if (currentQ < questions.length) renderQuestion();
+  else submitResult();
+}
+
+async function submitResult() {
+  let bestMatch = idols[currentGen][0];
+  let minDiff = Infinity;
+  idols[currentGen].forEach(idol => {
+    let diff = 0;
+    for (let i = 0; i < 5; i++) diff += Math.pow(userScores[i] - idol.scores[i], 2);
+    if (diff < minDiff) { minDiff = diff; bestMatch = idol; }
+  });
+
+  const resultData = { name: bestMatch.name, desc: bestMatch.desc, detail: bestMatch.detail, scores: userScores, matched_at: new Date().toISOString() };
+
+  try {
+    const res = await fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: currentCode, gen: currentGen, resultData }) });
+    const data = await res.json();
+    if (data.success) showResult(data.result, data.remaining);
+    else { alert('保存失败：' + data.error); location.reload(); }
+  } catch (e) { alert('网络错误'); location.reload(); }
+}
+
+function showResult(result, remaining) {
+  document.getElementById('rName').innerText = result.name;
+  document.getElementById('rDesc').innerText = result.desc;
+  document.getElementById('rDetail').innerText = result.detail;
+
+  const statusArea = document.getElementById('statusArea');
+  if (remaining > 0) {
+    statusArea.innerHTML = `<div class="status-badge">剩余 ${remaining} 次测试机会</div><button class="btn-secondary" onclick="location.reload()" style="margin-top:16px;">测试其他代际（将覆盖本次结果）</button>`;
+  } else {
+    statusArea.innerHTML = `<div class="status-badge">测试次数已用完 · 最终档案</div>`;
+  }
+  show('page-result');
+}
+
+document.getElementById('codeInput').addEventListener('input', function(e) { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); });
+document.getElementById('codeInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') checkCode(); });
+</script>
+</body>
+</html>
