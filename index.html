@@ -17,40 +17,54 @@
     .btn-primary { width: 100%; padding: 16px; background: linear-gradient(135deg, #ff3366, #ff6b9d); color: #fff; font-weight: bold; border: none; border-radius: 12px; font-size: 17px; cursor: pointer; margin-top: 16px; }
     .btn-primary:disabled { opacity: 0.5; }
     .msg { color: #ff4444; font-size: 13px; margin-top: 12px; text-align: center; min-height: 18px; }
-    
-    /* 代际选择页 */
     .gen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
     .gen-card { background: #151515; border: 1.5px solid #222; border-radius: 12px; padding: 20px 12px; text-align: center; cursor: pointer; transition: 0.2s; }
     .gen-card:hover { border-color: #ff3366; background: #1a1015; }
     .gen-card h3 { margin: 0 0 8px; font-size: 16px; color: #ff6b9d; }
     .gen-card p { margin: 0; font-size: 11px; color: #888; line-height: 1.4; }
-    
-    /* 答题页 */
     .quiz-header { display: flex; justify-content: space-between; font-size: 13px; color: #888; margin-bottom: 16px; }
     .progress { height: 4px; background: #222; border-radius: 2px; overflow: hidden; margin-bottom: 24px; }
     .progress-fill { height: 100%; background: linear-gradient(90deg, #ff3366, #ff6b9d); width: 0%; transition: width 0.4s; }
     .q-text { font-size: 18px; line-height: 1.6; font-weight: 600; margin-bottom: 24px; }
     .opt { width: 100%; padding: 14px; background: #151515; border: 1.5px solid #222; color: #fff; border-radius: 10px; margin-bottom: 10px; text-align: left; cursor: pointer; font-size: 14px; line-height: 1.5; }
     .opt:hover { border-color: #ff3366; }
-    
-    /* 结果页 */
+    .opt.selected { border-color: #ff3366; background: #2a1018; }
+    .quiz-nav { display: flex; gap: 10px; margin-top: 8px; }
+    .btn-secondary { flex: 1; padding: 14px; background: #1a1a1a; color: #fff; border: 1px solid #333; border-radius: 12px; font-size: 15px; cursor: pointer; }
+    .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; }
     .poster { background: linear-gradient(145deg, #1a0f14, #0f0f0f); border: 1px solid #2a2a2a; border-radius: 20px; padding: 30px 20px; text-align: center; }
     .poster-tag { font-size: 11px; color: #ff3366; letter-spacing: 3px; margin-bottom: 12px; }
     .poster-name { font-size: 30px; font-weight: 800; margin: 8px 0; background: linear-gradient(135deg, #fff, #ff6b9d); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .poster-desc { color: #aaa; font-size: 15px; margin-bottom: 16px; }
     .poster-detail { background: rgba(255,51,102,0.08); border-left: 3px solid #ff3366; padding: 14px; border-radius: 8px; text-align: left; font-size: 13px; line-height: 1.7; color: #ddd; }
     .poster-footer { margin-top: 20px; font-size: 11px; color: #555; }
-    .btn-secondary { width: 100%; padding: 14px; background: #1a1a1a; color: #fff; border: 1px solid #333; border-radius: 12px; font-size: 15px; cursor: pointer; margin-top: 10px; }
     .status-badge { display: inline-block; padding: 4px 12px; background: rgba(255,51,102,0.15); color: #ff6b9d; border-radius: 20px; font-size: 12px; margin-top: 12px; }
+    .gen-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .gen-tab { padding: 6px 14px; background: #1a1a1a; border: 1px solid #333; border-radius: 20px; font-size: 13px; cursor: pointer; color: #888; }
+    .gen-tab.active { border-color: #ff3366; color: #ff6b9d; background: #2a1018; }
+    /* 结算确认页 */
+    .confirm-box { text-align: center; padding: 50px 0; }
+    .confirm-box .icon { font-size: 60px; margin-bottom: 20px; }
+    .confirm-box h2 { font-size: 22px; margin: 0 0 12px; }
+    .confirm-box p { color: #888; font-size: 14px; line-height: 1.6; margin: 0 0 30px; }
+    /* 计算进度页 */
+    .calc-box { text-align: center; padding: 60px 0; }
+    .calc-box .spinner { font-size: 50px; margin-bottom: 30px; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .calc-bar { height: 6px; background: #222; border-radius: 3px; overflow: hidden; margin: 20px 0; }
+    .calc-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #ff3366, #ff6b9d); border-radius: 3px; }
+    .calc-text { color: #ff6b9d; font-size: 14px; min-height: 20px; }
+    .calc-pct { color: #666; font-size: 12px; margin-top: 8px; }
   </style>
 </head>
 <body>
 <div class="wrap">
+
   <!-- Page 1: 输入授权码 -->
   <div id="page-input">
     <div class="hero">
       <h1>✨ K-pop 性格原型</h1>
-      <p>20 道深度情境题 · 匹配 60 位顶级女团核心原型<br>测试完成后输入授权码查看完整报告</p>
+      <p>20 道深度情境题 · 匹配 60 位顶级女团核心原型<br>输入授权码开始测试或查看已生成的档案</p>
       <input type="text" id="codeInput" class="code-input" maxlength="6" placeholder="输入 6 位授权码" autocomplete="off">
       <button class="btn-primary" id="checkBtn" onclick="checkCode()">开始测试</button>
       <div class="msg" id="msg"></div>
@@ -59,28 +73,17 @@
 
   <!-- Page 2: 代际选择 -->
   <div id="page-gen" class="hidden">
-    <div class="hero">
+    <div class="hero" style="padding:30px 0;">
       <h1>选择你的测试宇宙</h1>
-      <p>每个宇宙包含该时代最具代表性的女团原型</p>
+      <p>每个宇宙包含该时代最具代表性的女团原型<br><span id="genRemainHint" style="color:#ff6b9d;"></span></p>
     </div>
     <div class="gen-grid">
-      <div class="gen-card" onclick="selectGen('gen2')">
-        <h3>二代 · 情怀考古</h3>
-        <p>少女时代 / T-ara / 2NE1 / f(x) / KARA / SISTAR / 4minute / Apink / miss A / Fiestar / Nine Muses / Hello Venus / Stellar / Wonder Girls / Girl's Day</p>
-      </div>
-      <div class="gen-card" onclick="selectGen('gen3')">
-        <h3>三代 · 个性顶流</h3>
-        <p>BLACKPINK / TWICE / Red Velvet / MAMAMOO / GFRIEND / AOA / EXID / MOMOLAND / CLC / Dreamcatcher / April / Weki Meki / gugudan / LABOUM / PRISTIN</p>
-      </div>
-      <div class="gen-card" onclick="selectGen('gen4')">
-        <h3>四代 · 流量主力</h3>
-        <p>IVE / aespa / NewJeans / (G)I-DLE / LE SSERAFIM / ITZY / nmixx / STAYC / fromis_9 / Kep1er / Billlie / PURPLE KISS / Weeekly / Cherry Bullet / EVERGLOW</p>
-      </div>
-      <div class="gen-card" onclick="selectGen('gen5')">
-        <h3>五代 · 新粉选秀</h3>
-        <p>BABYMONSTER / ILLIT / KATSEYE / FIFTY FIFTY / Hearts2Hearts / izna / tripleS / MEOVV / UNIS / IDNTT / REDCODE / XG / H1-KEY / MADEIN / SAYMYNAME</p>
-      </div>
+      <div class="gen-card" onclick="selectGen('gen2')"><h3>二代 · 情怀考古</h3><p>少女时代 / T-ara / 2NE1 / f(x) / KARA / SISTAR / 4minute / Apink / miss A / Fiestar / Nine Muses / Hello Venus / Stellar / Wonder Girls / Girl's Day</p></div>
+      <div class="gen-card" onclick="selectGen('gen3')"><h3>三代 · 个性顶流</h3><p>BLACKPINK / TWICE / Red Velvet / MAMAMOO / GFRIEND / AOA / EXID / MOMOLAND / CLC / Dreamcatcher / April / Weki Meki / gugudan / LABOUM / PRISTIN</p></div>
+      <div class="gen-card" onclick="selectGen('gen4')"><h3>四代 · 流量主力</h3><p>IVE / aespa / NewJeans / (G)I-DLE / LE SSERAFIM / ITZY / nmixx / STAYC / fromis_9 / Kep1er / Billlie / PURPLE KISS / Weeekly / Cherry Bullet / EVERGLOW</p></div>
+      <div class="gen-card" onclick="selectGen('gen5')"><h3>五代 · 新粉选秀</h3><p>BABYMONSTER / ILLIT / KATSEYE / FIFTY FIFTY / Hearts2Hearts / izna / tripleS / MEOVV / UNIS / IDNTT / REDCODE / XG / H1-KEY / MADEIN / SAYMYNAME</p></div>
     </div>
+    <button class="btn-secondary" id="viewResultBtn" style="display:none; margin-top:16px;" onclick="showResultView()">📂 查看已测代际结果</button>
   </div>
 
   <!-- Page 3: 答题 -->
@@ -92,10 +95,36 @@
     <div class="progress"><div class="progress-fill" id="prog"></div></div>
     <div class="q-text" id="qText"></div>
     <div id="opts"></div>
+    <div class="quiz-nav">
+      <button class="btn-secondary" id="prevBtn" onclick="prevQuestion()">← 上一题</button>
+    </div>
   </div>
 
-  <!-- Page 4: 结果 -->
+  <!-- Page 4: 结算确认 -->
+  <div id="page-confirm" class="hidden">
+    <div class="confirm-box">
+      <div class="icon">🎯</div>
+      <h2>你已完成全部 20 题</h2>
+      <p>系统将解析你的 5 维性格向量，<br>在 60 个原型中匹配你的本命 Idol。</p>
+      <button class="btn-primary" onclick="startCalc()">确认开始结算</button>
+      <button class="btn-secondary" style="margin-top:10px;" onclick="backToLastQ()">返回检查答案</button>
+    </div>
+  </div>
+
+  <!-- Page 5: 计算进度 -->
+  <div id="page-calc" class="hidden">
+    <div class="calc-box">
+      <div class="spinner">💫</div>
+      <h2 style="margin:0 0 10px;">正在生成你的专属档案</h2>
+      <div class="calc-bar"><div class="calc-fill" id="calcFill"></div></div>
+      <div class="calc-text" id="calcText">正在解析你的 20 个选择...</div>
+      <div class="calc-pct" id="calcPct">0%</div>
+    </div>
+  </div>
+
+  <!-- Page 6: 结果 -->
   <div id="page-result" class="hidden">
+    <div class="gen-tabs" id="genTabs"></div>
     <div class="poster">
       <div class="poster-tag">K-POP PERSONALITY ARCHIVE</div>
       <div class="poster-name" id="rName">--</div>
@@ -105,14 +134,14 @@
     </div>
     <p style="text-align:center; color:#666; font-size:13px; margin:20px 0;">👆 长按上方卡片保存海报</p>
     <div id="statusArea" style="text-align:center;"></div>
-    <button class="btn-secondary" onclick="location.reload()">返回首页</button>
+    <button class="btn-secondary" style="margin-top:10px;" onclick="location.reload()">返回首页</button>
   </div>
+
 </div>
 
 <script>
 // ========== 20道题 (5维: E能量, T理性, D自律, A野心, C共情) ==========
 const questions = [
-  // E维度 (1-4)
   { q: "参加一个有很多陌生人的聚会，你通常是？", opts: [
     { t: "主动破冰，成为气氛组，甚至主动提议玩游戏", s: [4, 2, 2, 3, 2] },
     { t: "安静待在角落，等别人来搭话，只和认识的人聊", s: [1, 3, 3, 1, 2] },
@@ -137,7 +166,6 @@ const questions = [
     { t: "平静，观察谁看起来比较友善", s: [2, 3, 3, 2, 3] },
     { t: "无所谓，反正以后也不会再联系", s: [2, 2, 2, 1, 2] }
   ]},
-  // T维度 (5-8)
   { q: "和朋友/同事发生严重误会，你通常？", opts: [
     { t: "列出利弊分析，用事实和逻辑说服对方", s: [2, 4, 3, 3, 2] },
     { t: "当和事佬，努力找让双方都满意的方案", s: [2, 2, 3, 1, 4] },
@@ -162,8 +190,7 @@ const questions = [
     { t: "直接反驳，如果我觉得自己没错", s: [4, 3, 2, 4, 3] },
     { t: "表面接受，心里有自己的判断", s: [2, 4, 3, 3, 2] }
   ]},
-  // D维度 (9-12)
-  { q: "为了准备一个重要的考试/项目，连续熬夜后身体到达极限，你会？", opts: [
+  { q: "为了准备重要考试/项目，连续熬夜后身体到达极限，你会？", opts: [
     { t: "吞下咖啡/功能饮料，死磕到底，哪怕状态不好也要完成", s: [2, 3, 4, 3, 2] },
     { t: "嘴上抱怨好累，但关键时刻绝不掉链子", s: [4, 2, 2, 3, 3] },
     { t: "担心队友/同事状态，主动帮忙分担", s: [2, 2, 3, 1, 4] },
@@ -187,7 +214,6 @@ const questions = [
     { t: "完美是给别人看的，自己舒服就行", s: [2, 2, 1, 1, 4] },
     { t: "在能力范围内做到最好", s: [2, 3, 3, 2, 3] }
   ]},
-  // A维度 (13-16)
   { q: "在团队中争取核心位置/资源，你的态度是？", opts: [
     { t: "主动出击，用实力和气场证明自己配得上", s: [3, 3, 3, 4, 2] },
     { t: "顺其自然，如果选我我就做，不选我也不强求", s: [2, 3, 3, 1, 3] },
@@ -212,7 +238,6 @@ const questions = [
     { t: "和爱的人在一起，平凡幸福", s: [2, 2, 3, 1, 4] },
     { t: "不断突破自我，不留遗憾", s: [3, 3, 4, 3, 3] }
   ]},
-  // C维度 (17-20)
   { q: "朋友向你倾诉烦恼，你会？", opts: [
     { t: "认真倾听，给予情感支持和安慰", s: [2, 2, 3, 1, 4] },
     { t: "帮忙分析问题，提供解决方案", s: [2, 4, 3, 2, 2] },
@@ -313,81 +338,151 @@ const idols = {
   ]
 };
 
+const GEN_NAMES = { gen2: '二代', gen3: '三代', gen4: '四代', gen5: '五代' };
+
+// ========== 状态 ==========
 let currentCode = '';
 let currentGen = '';
+let remaining = 0;
+let serverResults = {};      // { gen2:{...}, gen3:{...} }
+let answers = new Array(20).fill(null);
 let currentQ = 0;
-let userScores = [0, 0, 0, 0, 0]; // [E, T, D, A, C]
 
 function show(id) {
   document.querySelectorAll('.wrap > div').forEach(d => d.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
 }
+function showMsg(text) { document.getElementById('msg').innerText = text; }
 
-function showMsg(text) {
-  const el = document.getElementById('msg');
-  el.innerText = text;
-}
-
+// 1. 验证授权码
 async function checkCode() {
   const code = document.getElementById('codeInput').value.trim().toUpperCase();
   if (code.length !== 6) return showMsg('请输入完整的 6 位授权码');
 
   const btn = document.getElementById('checkBtn');
-  btn.disabled = true; btn.innerText = '验证中...';
-  showMsg('');
+  btn.disabled = true; btn.innerText = '验证中...'; showMsg('');
 
   try {
     const res = await fetch('/api/check', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code }) });
     const data = await res.json();
     if (data.error) { showMsg(data.error); btn.disabled = false; btn.innerText = '开始测试'; return; }
-    
+
     currentCode = code;
-    // 如果所有代际都测过了且次数用完，直接提示
-    if (data.remaining <= 0 && Object.keys(data.results).length >= 4) {
-      showMsg('该授权码所有代际测试已完成');
-      btn.disabled = false; btn.innerText = '开始测试';
-      return;
+    remaining = data.remaining;
+    serverResults = data.results || {};
+    const hasResult = Object.keys(serverResults).length > 0;
+
+    if (remaining > 0) {
+      // 还能测 → 进代际选择
+      document.getElementById('genRemainHint').innerText = `剩余 ${remaining} 次测试机会`;
+      document.getElementById('viewResultBtn').style.display = hasResult ? 'block' : 'none';
+      show('page-gen');
+    } else {
+      // 次数用完 → 不能进测试，直接看结果
+      if (hasResult) {
+        currentGen = Object.keys(serverResults)[0];
+        showResultView();
+      } else {
+        showMsg('该授权码测试次数已用完，且无测试记录');
+      }
     }
-    
-    show('page-gen');
-  } catch (e) { showMsg('网络错误'); btn.disabled = false; btn.innerText = '开始测试'; }
+    btn.disabled = false; btn.innerText = '开始测试';
+  } catch (e) {
+    showMsg('网络错误'); btn.disabled = false; btn.innerText = '开始测试';
+  }
 }
 
+// 2. 选代际进入答题
 function selectGen(gen) {
+  if (remaining <= 0) return alert('测试次数已用完，无法再次测试');
   currentGen = gen;
+  answers = new Array(20).fill(null);
   currentQ = 0;
-  userScores = [0, 0, 0, 0, 0];
+  document.getElementById('remainHint').innerText = `剩余 ${remaining} 次`;
   show('page-quiz');
   renderQuestion();
 }
 
+// 3. 渲染题目（含上一题高亮）
 function renderQuestion() {
   const q = questions[currentQ];
   document.getElementById('qNum').innerText = currentQ + 1;
   document.getElementById('qText').innerText = q.q;
   document.getElementById('prog').style.width = `${(currentQ / questions.length) * 100}%`;
+  document.getElementById('prevBtn').disabled = (currentQ === 0);
 
   const container = document.getElementById('opts');
   container.innerHTML = '';
-  q.opts.forEach(opt => {
+  q.opts.forEach((opt, idx) => {
     const btn = document.createElement('button');
-    btn.className = 'opt';
+    btn.className = 'opt' + (answers[currentQ] === idx ? ' selected' : '');
     btn.innerText = opt.t;
-    btn.onclick = () => selectOption(opt.s);
+    btn.onclick = () => selectOption(idx);
     container.appendChild(btn);
   });
 }
 
-function selectOption(scores) {
-  for (let i = 0; i < 5; i++) userScores[i] += scores[i];
+// 4. 选选项 → 前进
+function selectOption(idx) {
+  answers[currentQ] = idx;
   currentQ++;
   if (currentQ < questions.length) renderQuestion();
-  else submitResult();
+  else show('page-confirm');   // 全部答完 → 结算确认
 }
 
+// 5. 上一题
+function prevQuestion() {
+  if (currentQ > 0) { currentQ--; renderQuestion(); }
+}
+
+// 6. 返回检查最后一题
+function backToLastQ() {
+  currentQ = questions.length - 1;
+  document.getElementById('remainHint').innerText = `剩余 ${remaining} 次`;
+  show('page-quiz');
+  renderQuestion();
+}
+
+// 7. 开始结算（3秒进度条）
+function startCalc() {
+  show('page-calc');
+  const fill = document.getElementById('calcFill');
+  const pct = document.getElementById('calcPct');
+  const txt = document.getElementById('calcText');
+  const steps = ['正在解析你的 20 个选择...', '构建 5 维性格向量 [E·T·D·A·C]...', '在 60 个原型中扫描匹配...', '计算欧氏距离，锁定本命...', '生成专属档案海报...'];
+  let p = 0, lastSi = -1;
+  fill.style.width = '0%'; pct.innerText = '0%'; txt.innerText = steps[0];
+  const iv = setInterval(() => {
+    p += 100 / 30;   // 30 帧 × 100ms = 3 秒
+    if (p >= 100) {
+      p = 100; clearInterval(iv);
+      fill.style.width = '100%'; pct.innerText = '100%';
+      setTimeout(submitResult, 300);   // 满格后短暂停顿再出结果
+      return;
+    }
+    fill.style.width = p + '%';
+    pct.innerText = Math.floor(p) + '%';
+    const si = Math.min(steps.length - 1, Math.floor(p / 100 * steps.length));
+    if (si !== lastSi) { txt.innerText = steps[si]; lastSi = si; }
+  }, 100);
+}
+
+// 8. 计算分数（根据 answers 重新累加，重选自动生效）
+function calcScores() {
+  const s = [0, 0, 0, 0, 0];
+  answers.forEach((idx, i) => {
+    if (idx != null) {
+      const opt = questions[i].opts[idx];
+      for (let j = 0; j < 5; j++) s[j] += opt.s[j];
+    }
+  });
+  return s;
+}
+
+// 9. 匹配 + 保存
 async function submitResult() {
-  let bestMatch = idols[currentGen][0];
-  let minDiff = Infinity;
+  const userScores = calcScores();
+  let bestMatch = idols[currentGen][0], minDiff = Infinity;
   idols[currentGen].forEach(idol => {
     let diff = 0;
     for (let i = 0; i < 5; i++) diff += Math.pow(userScores[i] - idol.scores[i], 2);
@@ -399,25 +494,55 @@ async function submitResult() {
   try {
     const res = await fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: currentCode, gen: currentGen, resultData }) });
     const data = await res.json();
-    if (data.success) showResult(data.result, data.remaining);
-    else { alert('保存失败：' + data.error); location.reload(); }
-  } catch (e) { alert('网络错误'); location.reload(); }
+    if (data.success) {
+      remaining = data.remaining;
+      serverResults[currentGen] = data.result;
+      showResultView();
+    } else {
+      alert('保存失败：' + data.error);
+      location.reload();
+    }
+  } catch (e) {
+    alert('网络错误'); location.reload();
+  }
 }
 
-function showResult(result, remaining) {
-  document.getElementById('rName').innerText = result.name;
-  document.getElementById('rDesc').innerText = result.desc;
-  document.getElementById('rDetail').innerText = result.detail;
-
+// 10. 结果页（含代际切换标签）
+function showResultView() {
+  renderTabs();
+  renderPoster(currentGen);
   const statusArea = document.getElementById('statusArea');
   if (remaining > 0) {
-    statusArea.innerHTML = `<div class="status-badge">剩余 ${remaining} 次测试机会</div><button class="btn-secondary" onclick="location.reload()" style="margin-top:16px;">测试其他代际（将覆盖本次结果）</button>`;
+    statusArea.innerHTML = `<div class="status-badge">剩余 ${remaining} 次测试机会</div><button class="btn-primary" style="margin-top:16px;" onclick="show('page-gen')">继续测试其他代际</button>`;
   } else {
     statusArea.innerHTML = `<div class="status-badge">测试次数已用完 · 最终档案</div>`;
   }
   show('page-result');
 }
 
+function renderTabs() {
+  const tabs = document.getElementById('genTabs');
+  const keys = Object.keys(serverResults);
+  tabs.innerHTML = '';
+  if (keys.length === 0) return;
+  keys.forEach(k => {
+    const t = document.createElement('div');
+    t.className = 'gen-tab' + (k === currentGen ? ' active' : '');
+    t.innerText = GEN_NAMES[k] || k;
+    t.onclick = () => { currentGen = k; renderTabs(); renderPoster(k); };
+    tabs.appendChild(t);
+  });
+}
+
+function renderPoster(gen) {
+  const r = serverResults[gen];
+  if (!r) return;
+  document.getElementById('rName').innerText = r.name;
+  document.getElementById('rDesc').innerText = r.desc;
+  document.getElementById('rDetail').innerText = r.detail;
+}
+
+// 输入框自动大写 + 回车
 document.getElementById('codeInput').addEventListener('input', function(e) { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); });
 document.getElementById('codeInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') checkCode(); });
 </script>
